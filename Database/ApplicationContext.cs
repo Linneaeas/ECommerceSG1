@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
-public class ApplicationContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User>
 {
-    public DbSet<User> Users { get; set; }
-
-    public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        : base(options) { }
-
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 }

@@ -4,75 +4,58 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 public class CreateUserDto
 {
-    public Guid Id { get; set; }
     public string Email { get; set; } = "";
     public string Password { get; set; } = "";
 }
 
-
 public class UserDto
 {
-    public Guid Id { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string Id { get; set; }
+    public string? Email { get; set; }
 
     public UserDto(User user)
     {
         this.Id = user.Id;
         this.Email = user.Email;
-        this.Password = user.Password;
     }
 }
 
-public class UserService
-{
-    ApplicationContext context;
-
-    public UserService(ApplicationContext context)
-    {
-        this.context = context;
-    }
-
-    public User CreateUser(string email, string password)
-    {
-        User user = new User(email, password);
-
-        context.Users.Add(user);
-        context.SaveChanges();
-
-        return user;
-    }
-    public List<User> GetAll()
-    {
-        return context.Users.ToList();
-    }
-}
 
 [ApiController]
-[Route("api")]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    UserService userService;
-    ApplicationContext context;
-
-    public UserController(UserService userService)
+    private readonly UserManager<User> _userManager;
+    public UserController(UserManager<User> userManager)
     {
-        this.userService = userService;
-        this.context = context;
+        _userManager = userManager;
     }
-
 
     [HttpPost]
     [Route("create_user")]
-    public IActionResult CreateUser([FromForm] CreateUserDto dto)
+    public async Task<IActionResult> CreateUser([FromForm] CreateUserDto dto)
     {
         if (ModelState.IsValid)
         {
-            User user = userService.CreateUser(dto.Email, dto.Password);
-            return Ok(new UserDto(user));
+            var user = new User { UserName = dto.Email, Email = dto.Email };
+            var result = await _userManager.CreateAsync(user, dto.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok(new UserDto(user));
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return BadRequest(ModelState);
+            }
         }
         else
         {
@@ -80,10 +63,11 @@ public class UserController : ControllerBase
         }
     }
 
-
-    [HttpGet("hej")]
-    public List<UserDto> GetAllUsers()
+    [HttpGet("get_all_users")]
+    public async Task<IActionResult> GetAllUsers()
     {
-        return userService.GetAll().Select(user => new UserDto(user)).ToList();
+        var users = await _userManager.Users.ToListAsync();
+        var userDtos = users.Select(user => new UserDto(user)).ToList();
+        return Ok(userDtos);
     }
 }

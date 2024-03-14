@@ -31,6 +31,8 @@ dotnet tool install --global dotnet-ef
 
 9. dotnet add package Microsoft.AspNetCore.Identity
 
+   10.dotnet ef migrations add InitialCreate
+
 TODO:
 User Authentication:
 
