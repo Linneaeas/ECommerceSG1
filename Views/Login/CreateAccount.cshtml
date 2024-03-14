@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="mycontainer">
+
+    <div class="create-account">
+
+        <h1>@ViewData["Title"]</h1>
+
+        <div style="max-width: 500px; padding-top:30px;">
+            <form id="createAccountForm" method="post" class="row g-3">
+
+                <div class="col-md-6">
+                    <label for="inputEmail4" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" id="inputEmail4">
+                </div>
+                <div class="col-md-6">
+                    <label for="inputPassword4" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="inputPassword4">
+                </div>
+
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Create account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
