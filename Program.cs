@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=localhost;Database=ecommerce_database;"));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql("Host=localhost;Database=ecommerce_database;Password=mypassword;"));
 
 // Säg åt ASP.NET att vi skall använda deras inbyggda token system.
 // Det hanterar automatiskt validering och så.

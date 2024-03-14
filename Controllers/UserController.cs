@@ -26,7 +26,7 @@ public class UserDto
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api")]
 public class UserController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
@@ -35,8 +35,10 @@ public class UserController : ControllerBase
         _userManager = userManager;
     }
 
+
     [HttpPost]
     [Route("create_user")]
+
     public async Task<IActionResult> CreateUser([FromForm] CreateUserDto dto)
     {
         if (ModelState.IsValid)

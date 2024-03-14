@@ -10,6 +10,9 @@ document
       // Send form data to the server
       method: "POST",
       body: formData,
+      headers: {
+        "Authorization": "Bearer ",
+      },
     })
       .then((response) => response.json())
       .then((data) => {
